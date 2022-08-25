@@ -38,7 +38,7 @@ async function stream(type,Hmovies_id) {
 	}
 	let streams = [];
 	for (let i = 0; i < servers.length; i++) { 
-		let Sources = await getSources(servers[i].serverId, href,servers[i].server);
+		let Sources = await getSources(servers[i].serverId, href);
 		if (Sources){
 			streams[i]={
 				name: servers[i].server,
@@ -124,10 +124,7 @@ return subtitles;
 		return {RecaptchaNumber,iframeURL,iframeId};
     }
 	
-    async function getSources(serverId, href,server) {
-		if (server == 'Streamlare'){
-		return
-		}
+    async function getSources(serverId, href) {
         try {
             // First we get recaptchaSiteKey
             serverId = serverId;
@@ -188,19 +185,32 @@ async function meta(type, Hmovies_id) {
 		if(bg){
 			bg = bg.substring(22, bg.length - 2);
 		}
-		var imdbRating = html.querySelector("span.imdb").rawText;
+		var imdbRating = html.querySelector("span.imdb");
 		if (imdbRating){
-			imdbRating = imdbRating.split(':')[1];
+			imdbRating = imdbRating.rawText.split(':')[1];
 		}
 		var released = details[0].childNodes[2].rawText;
 		var year = released.slice('-')[0];
 		var genresarray = details[1].querySelectorAll('a');
         var title = html.querySelector("h2.heading-name a").rawText;
-        var description = html.querySelector("div.description").childNodes[2].rawText;
-        var runtime = html.querySelector("span.duration").rawText;
+        var description = html.querySelector("div.description");
+		if (description){
+			if(description.childNodes.length){
+			description =  description.childNodes[2];
+			}else{
+			description= description.rawText;
+			}
+		}
 		var actorsarray = details[2].querySelectorAll('a');
 		var details2 = html.querySelector("div.elements div.row div.col-xl-6").querySelectorAll('div');
 		var country = details2[1].querySelector('a').rawAttributes['title'];
+        var runtime = html.querySelector("span.duration");
+		if (runtime){
+			runtime = runtime.rawText;
+		}else {
+			runtime = details2[0].childNodes[1].rawText;
+		}
+		
 		 if (type == "series"){
 		var seasons = await seasonlist(Hmovies_id);
 		}
@@ -275,7 +285,7 @@ async function search(type, query) {
                         name: $(el).find('.film-name a').attr('title'),
                         type: "movie",
                         //href: $(el).find('.film-name a').attr('href'),
-                        id: "Hmovies_id:" + $(el).find('.film-name a').attr('title').replace(/\s/g,'-') +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
+                        id: "Hmovies_id:" + encodeURI($(el).find('.film-name a').attr('title').replace(/\s/g,'-').toLowerCase()) +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
                         releaseInfo: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
 						poster: $(el).find('.film-poster img').attr('data-src'),
 						posterShape: 'poster'
@@ -287,7 +297,7 @@ async function search(type, query) {
                         name: $(el).find('.film-name a').attr('title'),
                         type: "series",
                         //href: $(el).find('.film-name a').attr('href'),
-                        id: "Hmovies_id:" + $(el).find('.film-name a').attr('title').replace(/\s/g,'-') +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
+                        id: "Hmovies_id:" + encodeURI($(el).find('.film-name a').attr('title').replace(/\s/g,'-').toLowerCase()) +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
                         seasons: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
 						poster: $(el).find('.film-poster img').attr('data-src'),
 						posterShape: 'poster'
@@ -359,9 +369,11 @@ async function catalog(type, id) {
                     return {
                         name: $(el).find('.film-name a').attr('title'),
                         type: "movie",
-                        //href: $(el).find('.film-name a').attr('href'),
-                        id: "Hmovies_id:" + $(el).find('.film-name a').attr('title').replace(/\s/g,'-') +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
+                        //href: $(el).find('.film-name a').attr('href'), 
+                        id: "Hmovies_id:" + encodeURI($(el).find('.film-name a').attr('title').replace(/\s/g,'-').toLowerCase()) +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
                         releaseInfo: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
+						//releaseInfo: $(el).find('.fd-infor > .fdi-item').first().text() || "N/A",
+						//duration: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
 						poster: $(el).find('.film-poster img').attr('data-src'),
 						posterShape: 'poster'
                         //quality: $(el).find('.fd-infor > .fdi-item strong').text() || "N/A",
@@ -372,7 +384,7 @@ async function catalog(type, id) {
                         name: $(el).find('.film-name a').attr('title'),
                         type: "series",
                         //href: $(el).find('.film-name a').attr('href'),
-                        id: "Hmovies_id:" + $(el).find('.film-name a').attr('title').replace(/\s/g,'-') +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
+                        id: "Hmovies_id:" + encodeURI($(el).find('.film-name a').attr('title').replace(/\s/g,'-').toLowerCase()) +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
                         seasons: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
 						poster: $(el).find('.film-poster img').attr('data-src'),
 						posterShape: 'poster'
