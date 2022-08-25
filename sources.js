@@ -56,6 +56,7 @@ async function stream(type,Hmovies_id) {
 	//console.log(streams);
 		return streams;
 }
+
 async function getsubtitles(subs) {
 	let subtitles = [];
 	for (let i = 0; i < subs.length; i++) { 
@@ -67,6 +68,7 @@ async function getsubtitles(subs) {
 	};
 return subtitles;
 }
+
     async function getRecaptchaKey(watchURL) {
 		//console.log (watchURL);
         let response = (await client.get(watchURL)).data
@@ -110,7 +112,6 @@ return subtitles;
             } 
         })
         let URL = info.data.link // e.x https://mzzcloud.life/embed-4/25kKV67FpxEH?z=
-		console.log('URL',URL);
         let resp =  (await client.get(URL, { 
             headers: { 
                 "Referer": host
@@ -133,8 +134,6 @@ return subtitles;
 		}else{
 		iframeId = URL.substring(URL.lastIndexOf('/') + 1)	
 		}
-		console.log('iframeURL',iframeURL);
-		console.log('iframeId',iframeId);
 		return {iframeURL,iframeId};
     }
 	
@@ -144,7 +143,6 @@ return subtitles;
             serverId = serverId;
             watchURL = "https://sflix.to" + href.replace('/', "/watch-") + `.${serverId}`
 			
-			console.log('watchURL',watchURL);
             RecaptchaKey = await getRecaptchaKey(watchURL)
 			//return
             // console.log("recaptchaKey: " + RecaptchaKey)
@@ -210,21 +208,25 @@ async function meta(type, Hmovies_id) {
         var description = html.querySelector("div.description");
 		if (description){
 			if(description.childNodes.length){
-			description =  description.childNodes[2];
+			description =  description.childNodes[2].rawText;
 			}else{
 			description= description.rawText;
 			}
 		}
 		var actorsarray = details[2].querySelectorAll('a');
 		var details2 = html.querySelector("div.elements div.row div.col-xl-6").querySelectorAll('div');
-		var country = details2[1].querySelector('a').rawAttributes['title'];
+		if(details2){
+		var country = details2[1].querySelector('a');
+		if (country){	
+		 country = country.rawAttributes['title'];
+		}
         var runtime = html.querySelector("span.duration");
 		if (runtime){
 			runtime = runtime.rawText;
 		}else {
 			runtime = details2[0].childNodes[1].rawText;
 		}
-		
+		}
 		 if (type == "series"){
 		var seasons = await seasonlist(Hmovies_id);
 		}
@@ -293,25 +295,43 @@ async function search(type, query) {
                 // If movies then year is fine, if TV then shows # of seasons
 				
 				
-                if ((type == "movie") && ($(el).find('.film-name a').attr('href').startsWith('/movie/'))) {
+                 if ((type == "movie") && ($(el).find('.film-name a').attr('href').startsWith('/movie/'))) {
 					//console.log($(el).find('.film-poster img'))
+					 let id = slugify($(el).find('.film-name a').attr('title').replace(/\s/g,'-'), {
+						  replacement: '-',  // replace spaces with replacement character, defaults to `-`
+						  remove: undefined, // remove characters that match regex, defaults to `undefined`
+						  lower: true,      // convert to lower case, defaults to `false`
+						  strict: true,     // strip special characters except replacement, defaults to `false`
+						  locale: 'vi',       // language code of the locale to use
+						  trim: true         // trim leading and trailing replacement chars, defaults to `true`
+						})
                     return {
                         name: $(el).find('.film-name a').attr('title'),
                         type: "movie",
-                        //href: $(el).find('.film-name a').attr('href'),
-                        id: "Hmovies_id:" + encodeURI($(el).find('.film-name a').attr('title').replace(/\s/g,'-').toLowerCase()) +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
+                        //href: $(el).find('.film-name a').attr('href'), 
+                        id: "Hmovies_id:" + id +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
                         releaseInfo: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
+						//releaseInfo: $(el).find('.fd-infor > .fdi-item').first().text() || "N/A",
+						//duration: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
 						poster: $(el).find('.film-poster img').attr('data-src'),
 						posterShape: 'poster'
                         //quality: $(el).find('.fd-infor > .fdi-item strong').text() || "N/A",
                         //rating: $(el).find('.fd-infor > .fdi-item').first().text(),
                     }
                 } else if (type == "series" && ($(el).find('.film-name a').attr('href').startsWith('/tv/'))) {
-                    return {
+                    let id = slugify($(el).find('.film-name a').attr('title').replace(/\s/g,'-'), {
+						  replacement: '-',  // replace spaces with replacement character, defaults to `-`
+						  remove: undefined, // remove characters that match regex, defaults to `undefined`
+						  lower: true,      // convert to lower case, defaults to `false`
+						  strict: true,     // strip special characters except replacement, defaults to `false`
+						  locale: 'vi',       // language code of the locale to use
+						  trim: true         // trim leading and trailing replacement chars, defaults to `true`
+						})
+					return {
                         name: $(el).find('.film-name a').attr('title'),
                         type: "series",
                         //href: $(el).find('.film-name a').attr('href'),
-                        id: "Hmovies_id:" + encodeURI($(el).find('.film-name a').attr('title').replace(/\s/g,'-').toLowerCase()) +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
+                        id: "Hmovies_id:" + id +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
                         seasons: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
 						poster: $(el).find('.film-poster img').attr('data-src'),
 						posterShape: 'poster'
@@ -380,11 +400,19 @@ async function catalog(type, id) {
 				
                 if ((type == "movie") && ($(el).find('.film-name a').attr('href').startsWith('/movie/'))) {
 					//console.log($(el).find('.film-poster img'))
+					 let id = slugify($(el).find('.film-name a').attr('title').replace(/\s/g,'-'), {
+						  replacement: '-',  // replace spaces with replacement character, defaults to `-`
+						  remove: undefined, // remove characters that match regex, defaults to `undefined`
+						  lower: true,      // convert to lower case, defaults to `false`
+						  strict: true,     // strip special characters except replacement, defaults to `false`
+						  locale: 'vi',       // language code of the locale to use
+						  trim: true         // trim leading and trailing replacement chars, defaults to `true`
+						})
                     return {
                         name: $(el).find('.film-name a').attr('title'),
                         type: "movie",
                         //href: $(el).find('.film-name a').attr('href'), 
-                        id: "Hmovies_id:" + encodeURI($(el).find('.film-name a').attr('title').replace(/\s/g,'-').toLowerCase()) +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
+                        id: "Hmovies_id:" + id +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
                         releaseInfo: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
 						//releaseInfo: $(el).find('.fd-infor > .fdi-item').first().text() || "N/A",
 						//duration: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
@@ -394,11 +422,19 @@ async function catalog(type, id) {
                         //rating: $(el).find('.fd-infor > .fdi-item').first().text(),
                     }
                 } else if (type == "series" && ($(el).find('.film-name a').attr('href').startsWith('/tv/'))) {
-                    return {
+                    let id = slugify($(el).find('.film-name a').attr('title').replace(/\s/g,'-'), {
+						  replacement: '-',  // replace spaces with replacement character, defaults to `-`
+						  remove: undefined, // remove characters that match regex, defaults to `undefined`
+						  lower: true,      // convert to lower case, defaults to `false`
+						  strict: true,     // strip special characters except replacement, defaults to `false`
+						  locale: 'vi',       // language code of the locale to use
+						  trim: true         // trim leading and trailing replacement chars, defaults to `true`
+						})
+					return {
                         name: $(el).find('.film-name a').attr('title'),
                         type: "series",
                         //href: $(el).find('.film-name a').attr('href'),
-                        id: "Hmovies_id:" + encodeURI($(el).find('.film-name a').attr('title').replace(/\s/g,'-').toLowerCase()) +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
+                        id: "Hmovies_id:" + id +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
                         seasons: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
 						poster: $(el).find('.film-poster img').attr('data-src'),
 						posterShape: 'poster'
