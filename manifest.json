@@ -8,7 +8,7 @@
 
             "id": "Hmovies",
 
-            "name": "movies",
+            "name": "Himovies movies",
 
             "extra":
             [{
@@ -21,7 +21,7 @@
 
             "id": "Hseries",
 
-            "name": "series",
+            "name": "Himovies series",
 
             "extra":
             [{
@@ -34,25 +34,25 @@
 
             "id": "Hmovies-Popular",
 
-            "name": "Popular Movies"
+            "name": "Himovies Popular Movies"
         },{
             "type": "series",
 
             "id": "Hseries-Popular",
 
-            "name": "Popular TV Shows"
+            "name": "Himovies Popular TV Shows"
         },{
             "type": "movie",
 
             "id": "Hmovies-Top",
 
-            "name": "Top IMDB Rating"
+            "name": "Himovies Top IMDB Rating"
         },{
             "type": "series",
 
             "id": "Hseries-Top",
 
-            "name": "Top IMDB Rating"
+            "name": "Himovies Top IMDB Rating"
         }
     ],
     "resources": [
