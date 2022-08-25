@@ -1,0 +1,86 @@
+{
+    "id": "community.einthusantv",
+    "version": "0.0.1",
+    "name": "Himovies by dexter21767",
+    "description": "Addon for Streaming from Himovies by Dexter21767",
+    "catalogs": [{
+            "type": "movie",
+
+            "id": "Hmovies",
+
+            "name": "movies",
+
+            "extra":
+            [{
+                    "name": "search",
+                    "isRequired": true
+                }
+            ]
+        },{
+            "type": "series",
+
+            "id": "Hseries",
+
+            "name": "series",
+
+            "extra":
+            [{
+                    "name": "search",
+                    "isRequired": true
+                }
+            ]
+        },{
+            "type": "movie",
+
+            "id": "Hmovies-Popular",
+
+            "name": "Popular Movies"
+        },{
+            "type": "series",
+
+            "id": "Hseries-Popular",
+
+            "name": "Popular TV Shows"
+        },{
+            "type": "movie",
+
+            "id": "Hmovies-Top",
+
+            "name": "Top IMDB Rating"
+        },{
+            "type": "series",
+
+            "id": "Hseries-Top",
+
+            "name": "Top IMDB Rating"
+        }
+    ],
+    "resources": [
+		{
+            "name": "stream",
+            "types": [
+				"movie",
+				"series"
+            ],
+            "idPrefixes": [
+				"Hmovies_id"
+            ]
+        }, 
+		{
+			"name": "meta",
+			"types": [
+				"movie",
+				"series"
+            ],
+			"idPrefixes": ["Hmovies_id"]
+		}
+    ],
+    "types": [
+        "movie",
+		"series"
+    ],
+    "behaviorHints": {
+        "configurable": false,
+        "configurationRequired": false
+    }
+}
