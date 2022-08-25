@@ -110,7 +110,7 @@ return subtitles;
             } 
         })
         let URL = info.data.link // e.x https://mzzcloud.life/embed-4/25kKV67FpxEH?z=
-        // console.log(URL)
+		console.log('URL',URL);
         let resp =  (await client.get(URL, { 
             headers: { 
                 "Referer": host
@@ -118,10 +118,24 @@ return subtitles;
         })).data
         // console.log(resp)
         // Setup needed variables for getting sources
-        RecaptchaNumber = new RegExp(/recaptchaNumber = '(.*?)'/gm).exec(resp)[1],
+		
+        RecaptchaNumber = new RegExp(/recaptchaNumber = '(.*?)'/gm)
+		
+		if(RecaptchaNumber){
+			RecaptchaNumber=RecaptchaNumber.exec(resp);
+			if(RecaptchaNumber){
+			RecaptchaNumber=RecaptchaNumber[1];
+		}
+		}
         iframeURL = URL.substring(0, URL.lastIndexOf('/'))
+		if(URL.lastIndexOf('?')>0){
         iframeId = URL.substring(URL.lastIndexOf('/') + 1, URL.lastIndexOf('?'))
-		return {RecaptchaNumber,iframeURL,iframeId};
+		}else{
+		iframeId = URL.substring(URL.lastIndexOf('/') + 1)	
+		}
+		console.log('iframeURL',iframeURL);
+		console.log('iframeId',iframeId);
+		return {iframeURL,iframeId};
     }
 	
     async function getSources(serverId, href) {
@@ -130,7 +144,7 @@ return subtitles;
             serverId = serverId;
             watchURL = "https://sflix.to" + href.replace('/', "/watch-") + `.${serverId}`
 			
-			
+			console.log('watchURL',watchURL);
             RecaptchaKey = await getRecaptchaKey(watchURL)
 			//return
             // console.log("recaptchaKey: " + RecaptchaKey)
@@ -144,7 +158,7 @@ return subtitles;
             // console.log("captchaToken: " + RecaptchaToken)
             // END
             // After that, we scrape the iframe url for information like recaptchaNumber
-            let {RecaptchaNumber,iframeURL,iframeId} = await iframeInfo(serverId,RecaptchaToken,watchURL);
+            let {iframeURL,iframeId} = await iframeInfo(serverId,RecaptchaToken,watchURL);
             // console.log(RecaptchaNumber)
             // console.log(iframeURL)
             // console.log(iframeId)
