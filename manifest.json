@@ -3,8 +3,8 @@
     "version": "0.0.3",
     "name": "Himovies by dexter21767",
     "description": "Addon for Streaming from Himovies by Dexter21767",
-	"logo": "https://img.himovies.top/xxrz/100x100/100/14/e4/14e40a8f6e805f4ecde5286918890165/14e40a8f6e805f4ecde5286918890165.png",
-	"contactEmail":"ahmidiyasser@gmail.com",
+    "logo": "https://img.himovies.top/xxrz/100x100/100/14/e4/14e40a8f6e805f4ecde5286918890165/14e40a8f6e805f4ecde5286918890165.png",
+    "contactEmail": "ahmidiyasser@gmail.com",
     "catalogs": [{
             "type": "movie",
 
@@ -18,7 +18,7 @@
                     "isRequired": true
                 }
             ]
-        },{
+        }, {
             "type": "series",
 
             "id": "Hseries",
@@ -31,25 +31,25 @@
                     "isRequired": true
                 }
             ]
-        },{
+        }, {
             "type": "movie",
 
             "id": "Hmovies-Popular",
 
             "name": "Himovies Popular Movies"
-        },{
+        }, {
             "type": "series",
 
             "id": "Hseries-Popular",
 
             "name": "Himovies Popular TV Shows"
-        },{
+        }, {
             "type": "movie",
 
             "id": "Hmovies-Top",
 
             "name": "Himovies Top IMDB Rating"
-        },{
+        }, {
             "type": "series",
 
             "id": "Hseries-Top",
@@ -57,29 +57,27 @@
             "name": "Himovies Top IMDB Rating"
         }
     ],
-    "resources": [
-		{
+    "resources": [{
             "name": "stream",
             "types": [
-				"movie",
-				"series"
+                "movie",
+                "series"
             ],
             "idPrefixes": [
-				"Hmovies_id"
+                "Hmovies_id"
             ]
-        }, 
-		{
-			"name": "meta",
-			"types": [
-				"movie",
-				"series"
+        }, {
+            "name": "meta",
+            "types": [
+                "movie",
+                "series"
             ],
-			"idPrefixes": ["Hmovies_id"]
-		}
+            "idPrefixes": ["Hmovies_id"]
+        }
     ],
     "types": [
         "movie",
-		"series"
+        "series"
     ],
     "behaviorHints": {
         "configurable": false,
