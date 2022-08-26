@@ -359,7 +359,7 @@ async function seasonlist(Hmovies_id) {
 		for (let i = 0; i < list.length; i++) {
 			let seasonId = list[i].rawAttributes['data-id'];
 			let epurl = `${host}/ajax/v2/season/episodes/${seasonId}`;
-			
+			console.log('epurl',epurl)
 			eps = (await client.get(epurl)).data;
 			html = parse(eps);
 			var eplist = html.querySelectorAll("div.swiper-slide");
@@ -372,6 +372,7 @@ async function seasonlist(Hmovies_id) {
 				title: eplist[c].querySelector('div.film-detail').rawText,
 				season: i+1,
 				episode: c+1,
+				released: '2010-12-06T05:00:00.000Z'
 			});
 			}
 		}
