@@ -2,6 +2,7 @@ const axios = require('axios').default;
 const cheerio = require('cheerio');
 var slugify = require('slugify');
 const {parse} = require("fast-html-parser");
+const m3u = require('m3u8-reader')
 const host = "https://sflix.to";
 
 client = axios.create({
@@ -37,20 +38,29 @@ async function stream(type,Hmovies_id) {
     var href = `/tv/free-${slug}-hd-${id}`;
 	}
 	let streams = [];
-	for (let i = 0; i < servers.length; i++) { 
-		let Sources = await getSources(servers[i].serverId, href);
+	let streams_count = 0;
+	for (let source_counter = 0; source_counter < servers.length; source_counter++) { 
+		let Sources = await getSources(servers[source_counter].serverId, href);
 		if (Sources){
-			streams[i]={
-				name: servers[i].server,
-				description: servers[i].server,
-				url: Sources.sources[0].file
+			if(Sources.tracks){
+				var subtitles = await getsubtitles(Sources.tracks);
+			};
+			let m3u8_source = (await client.get(Sources.sources[0].file)).data;
+			var source_stream_array = m3u(m3u8_source);
+			for (var array_counter = 0; array_counter < source_stream_array.length; array_counter=array_counter+2) { 
+			//console.log('array',array);
+			streams[streams_count]={
+				name: servers[source_counter].server,
+				description: source_stream_array[array_counter]['STREAM-INF'].RESOLUTION,
+				url: source_stream_array[array_counter+1]
 			};
 			//console.log(Sources);
 			
 			if(Sources.tracks){
-				let subtitles = await getsubtitles(Sources.tracks);
-				streams[i].subtitles=subtitles;
+				streams[source_counter].subtitles=subtitles;
 			};
+			streams_count++
+			}
 		}
 	}
 	//console.log(streams);

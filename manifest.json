@@ -4,6 +4,7 @@
     "name": "Himovies by dexter21767",
     "description": "Addon for Streaming from Himovies by Dexter21767",
     "logo": "https://img.himovies.top/xxrz/100x100/100/14/e4/14e40a8f6e805f4ecde5286918890165/14e40a8f6e805f4ecde5286918890165.png",
+	"background":"https://raw.githubusercontent.com/Stremio/stremio-art/main/originals/Gladyz%20Pagaduan.jpg",
     "contactEmail": "ahmidiyasser@gmail.com",
     "catalogs": [{
             "type": "movie",
