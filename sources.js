@@ -204,6 +204,13 @@ async function meta(type, Hmovies_id) {
         var details = html.querySelector("div.elements div.row div.col-xl-5").querySelectorAll('div');
         var img = html.querySelector("div.dp-i-c-poster img").rawAttributes['src'];
 		var bg = html.querySelector("div.cover_follow").rawAttributes['style'];
+		var trailer = html.querySelector("div.iframe16x9 iframe");
+		if(trailer){
+			trailer  = trailer.rawAttributes['data-src'];
+			if(trailer){
+			trailer  = trailer.split('/embed/')[1];
+			}
+		}
 		if(bg){
 			bg = bg.substring(22, bg.length - 2);
 		}
@@ -212,7 +219,7 @@ async function meta(type, Hmovies_id) {
 			imdbRating = imdbRating.rawText.split(':')[1];
 		}
 		var released = details[0].childNodes[2].rawText;
-		var year = released.slice('-')[0];
+		var year = released.split('-')[0];
 		var genresarray = details[1].querySelectorAll('a');
         var title = html.querySelector("h2.heading-name a").rawText;
         var description = html.querySelector("div.description");
@@ -256,6 +263,7 @@ async function meta(type, Hmovies_id) {
             }
         }
 
+
         var metaObj = {
             id: Hmovies_id,
             name: title,
@@ -283,11 +291,14 @@ async function meta(type, Hmovies_id) {
         if (actors) {
             metaObj.cast = actors
         };
+		if (trailer){  
+		metaObj.trailers=[{ source: trailer, type: "Trailer" }]
+		}
         if (runtime){metaObj.runtime = runtime};
 		if (country){metaObj.country = country};
 		if (type == "series"){metaObj.videos = seasons};
 		if (imdbRating){metaObj.imdbRating = imdbRating};	 
-        //console.log("metaObj", metaObj);
+       // console.log("metaObj", metaObj);
         return metaObj;
 
 }
@@ -323,6 +334,7 @@ async function search(type, query) {
                         releaseInfo: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
 						//releaseInfo: $(el).find('.fd-infor > .fdi-item').first().text() || "N/A",
 						//duration: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
+						imdbRating: $(el).find('.fd-infor > .fdi-item').first().text() || "N/A",
 						poster: $(el).find('.film-poster img').attr('data-src'),
 						posterShape: 'poster'
                         //quality: $(el).find('.fd-infor > .fdi-item strong').text() || "N/A",
@@ -342,7 +354,8 @@ async function search(type, query) {
                         type: "series",
                         //href: $(el).find('.film-name a').attr('href'),
                         id: "Hmovies_id:" + id +':'+ $(el).find('.film-name a').attr('href').split('-').pop(),
-                        seasons: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
+                        //seasons: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
+						imdbRating: $(el).find('.fd-infor > .fdi-item').first().text() || "N/A",
 						poster: $(el).find('.film-poster img').attr('data-src'),
 						posterShape: 'poster'
                         //quality: $(el).find('.fd-infor > .fdi-item strong').text() || "N/A",
@@ -382,7 +395,8 @@ async function seasonlist(Hmovies_id) {
 				title: eplist[c].querySelector('div.film-detail').rawText,
 				season: i+1,
 				episode: c+1,
-				released: '2010-12-06T05:00:00.000Z'
+				released: '2010-12-06T05:00:00.000Z',
+				available: true
 			});
 			}
 		}
