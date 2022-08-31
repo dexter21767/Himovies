@@ -1,7 +1,7 @@
 {
-	"name": "stremio-addon-StreamAR",
-	"version": "0.0.1",
-	"description": "Addon for Streaming from Arabic websites",
+	"name": "stremio-addon-himovies",
+	"version": "0.0.4",
+	"description": "Addon for Streaming from Himovies by Dexter21767",
 	"scripts": {
 		"start": "node server.js"
 	},
