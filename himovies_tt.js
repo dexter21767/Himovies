@@ -53,7 +53,7 @@ async function getstream(type, Hmovies_id) {
             for (var array_counter = 0; array_counter < source_stream_array.length; array_counter = array_counter + 2) {
                 //console.log('array',array);
                 streams[streams_count] = {
-                    name: servers[source_counter].server,
+                    name: "Himovies " + servers[source_counter].server,
                     description: source_stream_array[array_counter]['STREAM-INF'].RESOLUTION,
                     url: source_stream_array[array_counter + 1]
                 };
