@@ -1,6 +1,6 @@
 {
     "id": "community.himovies",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "name": "Himovies by dexter21767",
     "description": "Addon for Streaming from Himovies by Dexter21767",
     "logo": "https://img.himovies.top/xxrz/100x100/100/14/e4/14e40a8f6e805f4ecde5286918890165/14e40a8f6e805f4ecde5286918890165.png",
@@ -65,7 +65,8 @@
                 "series"
             ],
             "idPrefixes": [
-                "Hmovies_id"
+                "Hmovies_id",
+				"tt"
             ]
         }, {
             "name": "meta",

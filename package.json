@@ -1,6 +1,6 @@
 {
 	"name": "stremio-addon-himovies",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "Addon for Streaming from Himovies by Dexter21767",
 	"scripts": {
 		"start": "node server.js"

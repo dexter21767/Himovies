@@ -1,8 +1,8 @@
 const axios = require('axios').default;
 const cheerio = require('cheerio');
-var slugify = require('slugify');
 const {parse} = require("fast-html-parser");
 const m3u = require('m3u8-reader')
+
 const host = "https://sflix.to";
 
 client = axios.create({
@@ -79,14 +79,14 @@ async function getsubtitles(subs) {
 return subtitles;
 }
 
-    async function getRecaptchaKey(watchURL) {
+async function getRecaptchaKey(watchURL) {
 		//console.log (watchURL);
         let response = (await client.get(watchURL)).data
         RecaptchaKey = new RegExp(/recaptcha_site_key = '(.*?)'/gm).exec(response)[1]
 		return RecaptchaKey;
     }
 
-    async function getVToken(RecaptchaKey) {
+async function getVToken(RecaptchaKey) {
         let info = (await client.get(`https://www.google.com/recaptcha/api.js?render=${RecaptchaKey}`, {
             headers: {
                 'Cache-Control': 'no-cache',
@@ -98,7 +98,7 @@ return subtitles;
 		return vToken;
     }
     
-    async function getRecaptchaToken(RecaptchaKey,vToken) {
+async function getRecaptchaToken(RecaptchaKey,vToken) {
         const reloadLink = `https://www.google.com/recaptcha/api2/reload?k=${RecaptchaKey}`
         let domain = btoa(`${host}:443`).replace(/\n/g, '').replace(/=/g, '.')
         let properLink = `https://www.google.com/recaptcha/api2/anchor?ar=1&k=${RecaptchaKey}&co=${domain}&hl=en&v=${vToken}&size=invisible&cb=cs3`
@@ -115,7 +115,7 @@ return subtitles;
 		return RecaptchaToken;
     }
 
-    async function iframeInfo(serverId,RecaptchaToken,watchURL) {
+async function iframeInfo(serverId,RecaptchaToken,watchURL) {
         let info = await client.get(`${host}/ajax/get_link/${serverId}?_token=${RecaptchaToken}`, { 
             headers: { 
                 "Referer": watchURL
@@ -147,7 +147,7 @@ return subtitles;
 		return {iframeURL,iframeId};
     }
 	
-    async function getSources(serverId, href) {
+async function getSources(serverId, href) {
         try {
             // First we get recaptchaSiteKey
             serverId = serverId;
@@ -472,6 +472,11 @@ async function catalog(type, id) {
             console.error(e)
         }
 }
+
+
+
+
+
 module.exports = {
 	catalog,
     search,
