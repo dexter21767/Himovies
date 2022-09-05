@@ -2,6 +2,7 @@ const axios = require('axios').default;
 const cheerio = require('cheerio');
 const {parse} = require("fast-html-parser");
 const m3u = require('m3u8-reader')
+const slugify = require('slugify')
 
 const host = "https://sflix.to";
 
