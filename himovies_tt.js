@@ -5,7 +5,7 @@ const {
     parse
 } = require("fast-html-parser");
 const m3u = require('m3u8-reader')
-    const cinemeta = require('./cinemeta');
+const cinemeta = require('./cinemeta');
 
 const host = "https://sflix.to";
 
@@ -24,16 +24,16 @@ async function getstream(type, Hmovies_id) {
     } else if (type == "series") {
         var url = `${host}/ajax/v2/episode/servers/${episodeId}`;
     }
-	console.log(url)
+    console.log(url)
     let response = (await client.get(url)).data;
     let $ = cheerio.load(response);
     let servers = ($('a').map((i, el) => {
-            return {
-                server: $(el).find('span').text() || null,
-                serverId: $(el).attr('data-id') || null,
-                slug: $(el).attr('id') || null,
-            }
-        })).get()
+        return {
+            server: $(el).find('span').text() || null,
+            serverId: $(el).attr('data-id') || null,
+            slug: $(el).attr('id') || null,
+        }
+    })).get()
     //console.log(servers);
     if (type == "movie") {
         var href = `/movie/free-${slug}-hd-${id}`;
@@ -86,36 +86,36 @@ async function getRecaptchaKey(watchURL) {
     //console.log (watchURL);
     let response = (await client.get(watchURL)).data
     RecaptchaKey = new RegExp(/recaptcha_site_key = '(.*?)'/gm).exec(response)[1]
-        return RecaptchaKey;
+    return RecaptchaKey;
 }
 
 async function getVToken(RecaptchaKey) {
     let info = (await client.get(`https://www.google.com/recaptcha/api.js?render=${RecaptchaKey}`, {
-            headers: {
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache',
-                'Expires': '0',
-            },
-        })).data
+        headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+        },
+    })).data
     vToken = (new RegExp(/releases\/(.*?)\//gm).exec(info)[1])
     return vToken;
 }
 
 async function getRecaptchaToken(RecaptchaKey, vToken) {
     const reloadLink = `https://www.google.com/recaptcha/api2/reload?k=${RecaptchaKey}`
-        let domain = btoa(`${host}:443`).replace(/\n/g, '').replace(/=/g, '.')
-        let properLink = `https://www.google.com/recaptcha/api2/anchor?ar=1&k=${RecaptchaKey}&co=${domain}&hl=en&v=${vToken}&size=invisible&cb=cs3`
-        let tokenRequest = (await client.get(properLink)).data
-        let longToken = cheerio.load(tokenRequest)('#recaptcha-token').attr('value')
-        let finalRequest = await client.post(reloadLink, `v=${vToken}&k=${RecaptchaKey}&c=${longToken}&co=${domain}&sa=&reason=q`, {
-            headers: {
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache',
-                'Expires': '0',
-            }
-        })
-        RecaptchaToken = new RegExp(/rresp\","(.+?)\"/gm).exec(finalRequest.data)[1]
-        return RecaptchaToken;
+    let domain = btoa(`${host}:443`).replace(/\n/g, '').replace(/=/g, '.')
+    let properLink = `https://www.google.com/recaptcha/api2/anchor?ar=1&k=${RecaptchaKey}&co=${domain}&hl=en&v=${vToken}&size=invisible&cb=cs3`
+    let tokenRequest = (await client.get(properLink)).data
+    let longToken = cheerio.load(tokenRequest)('#recaptcha-token').attr('value')
+    let finalRequest = await client.post(reloadLink, `v=${vToken}&k=${RecaptchaKey}&c=${longToken}&co=${domain}&sa=&reason=q`, {
+        headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+        }
+    })
+    RecaptchaToken = new RegExp(/rresp\","(.+?)\"/gm).exec(finalRequest.data)[1]
+    return RecaptchaToken;
 }
 
 async function iframeInfo(serverId, RecaptchaToken, watchURL) {
@@ -124,30 +124,30 @@ async function iframeInfo(serverId, RecaptchaToken, watchURL) {
             "Referer": watchURL
         }
     })
-        let URL = info.data.link // e.x https://mzzcloud.life/embed-4/25kKV67FpxEH?z=
-        let resp = (await client.get(URL, {
-                headers: {
-                    "Referer": host
-                }
-            })).data
-        // console.log(resp)
-        // Setup needed variables for getting sources
+    let URL = info.data.link // e.x https://mzzcloud.life/embed-4/25kKV67FpxEH?z=
+    let resp = (await client.get(URL, {
+        headers: {
+            "Referer": host
+        }
+    })).data
+    // console.log(resp)
+    // Setup needed variables for getting sources
 
-        RecaptchaNumber = new RegExp(/recaptchaNumber = '(.*?)'/gm)
+    RecaptchaNumber = new RegExp(/recaptchaNumber = '(.*?)'/gm)
 
+    if (RecaptchaNumber) {
+        RecaptchaNumber = RecaptchaNumber.exec(resp);
         if (RecaptchaNumber) {
-            RecaptchaNumber = RecaptchaNumber.exec(resp);
-            if (RecaptchaNumber) {
-                RecaptchaNumber = RecaptchaNumber[1];
-            }
+            RecaptchaNumber = RecaptchaNumber[1];
         }
-        iframeURL = URL.substring(0, URL.lastIndexOf('/'))
-        if (URL.lastIndexOf('?') > 0) {
-            iframeId = URL.substring(URL.lastIndexOf('/') + 1, URL.lastIndexOf('?'))
-        } else {
-            iframeId = URL.substring(URL.lastIndexOf('/') + 1)
-        }
-        return {
+    }
+    iframeURL = URL.substring(0, URL.lastIndexOf('/'))
+    if (URL.lastIndexOf('?') > 0) {
+        iframeId = URL.substring(URL.lastIndexOf('/') + 1, URL.lastIndexOf('?'))
+    } else {
+        iframeId = URL.substring(URL.lastIndexOf('/') + 1)
+    }
+    return {
         iframeURL,
         iframeId
     };
@@ -159,20 +159,20 @@ async function getSources(serverId, href) {
         serverId = serverId;
         watchURL = "https://sflix.to" + href.replace('/', "/watch-") + `.${serverId}`
 
-            RecaptchaKey = await getRecaptchaKey(watchURL)
-            //return
-            // console.log("recaptchaKey: " + RecaptchaKey)
-            // END
-            // Now we get vToken by calling a method
-            vToken = await getVToken(RecaptchaKey);
+        RecaptchaKey = await getRecaptchaKey(watchURL)
+        //return
+        // console.log("recaptchaKey: " + RecaptchaKey)
+        // END
+        // Now we get vToken by calling a method
+        vToken = await getVToken(RecaptchaKey);
         // console.log("vToken after: " + vToken)
         // END
         // Then we grab the token
         RecaptchaToken = await getRecaptchaToken(RecaptchaKey, vToken)
-            // console.log("captchaToken: " + RecaptchaToken)
-            // END
-            // After that, we scrape the iframe url for information like recaptchaNumber
-            let {
+        // console.log("captchaToken: " + RecaptchaToken)
+        // END
+        // After that, we scrape the iframe url for information like recaptchaNumber
+        let {
             iframeURL,
             iframeId
         } = await iframeInfo(serverId, RecaptchaToken, watchURL);
@@ -182,15 +182,15 @@ async function getSources(serverId, href) {
         // END
         const properURL = (iframeURL.replace('/embed', '/ajax/embed')) + `/getSources?id=${iframeId}&_token=${RecaptchaToken}&_number=${RecaptchaNumber}`
         return (await client.get(properURL, {
-                headers: {
-                    "Referer": "https://sflix.to/",
-                    "X-Requested-With": "XMLHttpRequest",
-                    "Accept": "*/*",
-                    "Accept-Language": "en-US,en;q=0.5",
-                    "Connection": "keep-alive",
-                    "TE": "trailers"
-                }
-            })).data
+            headers: {
+                "Referer": "https://sflix.to/",
+                "X-Requested-With": "XMLHttpRequest",
+                "Accept": "*/*",
+                "Accept-Language": "en-US,en;q=0.5",
+                "Connection": "keep-alive",
+                "TE": "trailers"
+            }
+        })).data
     } catch (e) {
         return;
         console.error(e)
@@ -203,7 +203,7 @@ async function getEp(type, Hmovies_id, season, episode) {
     var id = Hmovies_id.split(":")[2];
     var url = `${host}/ajax/v2/tv/seasons/${id}/`;
     let response = (await client.get(url)).data;
-	
+
     var html = parse(response);
     var list = html.querySelectorAll("a.dropdown-item");
 
@@ -222,8 +222,8 @@ async function getEp(type, Hmovies_id, season, episode) {
 
 
 async function stream(type, tt) {
-	
-	console.log (type,tt)
+
+    console.log(type, tt)
     if (type == "series") {
         let id = tt.split(':');
         tt = id[0];
@@ -232,7 +232,7 @@ async function stream(type, tt) {
     }
 
     const meta = await cinemeta(type, tt);
-    let url = `${host}/search/${meta.name.replace(/\s/g,'-')}`;
+    let url = `${host}/search/${meta.name.replace(/\s/g, '-')}`;
     console.log(url);
 
     let response = (await client.get(url)).data;
@@ -249,7 +249,7 @@ async function stream(type, tt) {
             return streams;
         } else if ((type == "series") && href.startsWith('/tv/')) {
             let himoviesid = "himoviesid:" + meta.slug + ':' + href.split('-').pop();
-            let streams = await getEp(type,himoviesid,season,episode);
+            let streams = await getEp(type, himoviesid, season, episode);
             return streams;
 
         }

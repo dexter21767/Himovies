@@ -272,13 +272,13 @@ async function meta(type, Hmovies_id) {
         name: title,
         posterShape: 'poster'
     };
-    if (year) {metaObj.releaseInfo = year};
-    if (img) {metaObj.poster = img};
-    if (bg) {metaObj.background = bg};
-    if (released) {metaObj.released = released};
-    if (genres) {metaObj.genres = genres};
-    if (description) {metaObj.description = description};
-    if (actors) {metaObj.cast = actors};
+    if (year) { metaObj.releaseInfo = year };
+    if (img) { metaObj.poster = img };
+    if (bg) { metaObj.background = bg };
+    if (released) { metaObj.released = released };
+    if (genres) { metaObj.genres = genres };
+    if (description) { metaObj.description = description };
+    if (actors) { metaObj.cast = actors };
     if (trailer) {
         metaObj.trailers = [{ source: trailer, type: "Trailer" }]
     }
@@ -318,7 +318,7 @@ async function search(type, query) {
                     imdbRating: $(el).find('.fd-infor > .fdi-item').first().text() || "N/A"
                 }
             } else if (type == "series" && ($(el).find('.film-name a').attr('href').startsWith('/tv/'))) {
-                let id = slugify($(el).find('.film-name a').attr('title').replace(/\s/g, '-'),{
+                let id = slugify($(el).find('.film-name a').attr('title').replace(/\s/g, '-'), {
                     replacement: '-', remove: undefined, lower: true, strict: true, locale: 'vi', trim: true
                 })
                 return {
@@ -380,7 +380,7 @@ async function catalog(type, id) {
             var url = `${host}/tv-show/`;
         } else if (id == "Hmovies-Top") {
             var url = `${host}/top-imdb/?type=movie`;
-        }else if (id == "Hseries-Top") {
+        } else if (id == "Hseries-Top") {
             var url = `${host}/top-imdb/?type=tv`;
         }
         console.log('url', url);

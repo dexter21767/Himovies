@@ -28,12 +28,12 @@ builder.defineCatalogHandler((args) => {
 	console.log("addon.js Catalog:", args);
 	if (args.extra.search) {
 		return Promise.resolve(himovies.search(args.type, args.extra.search))
-		//.then((metas) => { console.log('metas', metas) });
-		.then((metas) => ({ metas: metas}));
+			//.then((metas) => { console.log('metas', metas) });
+			.then((metas) => ({ metas: metas }));
 	} else {
 		return Promise.resolve(himovies.catalog(args.type, args.id))
-		//.then((metas) => { console.log('metas', metas) });
-		.then((metas) => ({ metas: metas}));
+			//.then((metas) => { console.log('metas', metas) });
+			.then((metas) => ({ metas: metas }));
 	}
 });
 
