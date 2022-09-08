@@ -400,6 +400,7 @@ async function catalog(type, id) {
                     type: "movie",
                     name: $(el).find('.film-name a').attr('title'),
                     releaseInfo: $(el).find('.fd-infor > .fdi-item').last().text() || "N/A",
+                    poster: $(el).find('.film-poster img').attr('data-src'),
                     posterShape: 'poster'
                 }
             } else if (type == "series" && ($(el).find('.film-name a').attr('href').startsWith('/tv/'))) {
