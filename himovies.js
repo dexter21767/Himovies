@@ -292,9 +292,13 @@ async function meta(type, Hmovies_id) {
 }
 
 
-async function search(type, query) {
+async function search(type, query,skip) {
     try {
         let url = `${host}/search/${query.replace(/\s/g, '-')}`
+        if(skip){
+            skip = Math.round((skip/32)+1);
+            url+= `?page=${skip}`
+        }
         console.log('url', url);
         let response = (await client.get(url)).data;
         let $ = cheerio.load(response);
@@ -372,16 +376,31 @@ async function seasonlist(Hmovies_id) {
 
 }
 
-async function catalog(type, id) {
+async function catalog(type, id,skip) {
     try {
+        if(skip){
+            skip = Math.round((skip/32)+1);}
+
         if (id == 'Hmovies-Popular') {
             var url = `${host}/movie/`;
+            if(skip){
+                url+= `?page=${skip}`
+            }
         } else if (id == "Hseries-Popular") {
             var url = `${host}/tv-show/`;
+            if(skip){
+                url+= `?page=${skip}`
+            }
         } else if (id == "Hmovies-Top") {
             var url = `${host}/top-imdb/?type=movie`;
+            if(skip){
+                url+= `&page=${skip}`
+            }
         } else if (id == "Hseries-Top") {
             var url = `${host}/top-imdb/?type=tv`;
+            if(skip){
+                url+= `&page=${skip}`
+            }
         }
         console.log('url', url);
         let response = (await client.get(url)).data;

@@ -25,13 +25,14 @@ builder.defineStreamHandler((args) => {
 });
 
 builder.defineCatalogHandler((args) => {
+	console.log('test');
 	console.log("addon.js Catalog:", args);
 	if (args.extra.search) {
-		return Promise.resolve(himovies.search(args.type, args.extra.search))
+		return Promise.resolve(himovies.search(args.type, args.extra.search,args.extra.skip))
 			//.then((metas) => { console.log('metas', metas) });
 			.then((metas) => ({ metas: metas }));
 	} else {
-		return Promise.resolve(himovies.catalog(args.type, args.id))
+		return Promise.resolve(himovies.catalog(args.type, args.id,args.extra.skip))
 			//.then((metas) => { console.log('metas', metas) });
 			.then((metas) => ({ metas: metas }));
 	}
