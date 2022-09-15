@@ -13,9 +13,7 @@
 		"m3u8-reader": "^1.1.0",
 		"needle": "^3.1.0",
 		"slugify": "^1.6.5",
-		"stremio-addon-sdk": "1.1.x",
-		"tough-cookie": "^4.0.0",
-		"urlsafe-base64": "^1.0.0"
+		"stremio-addon-sdk": "1.1.x"
 	},
 	"devDependencies": {
 		"nodemon": "^2.0.19"
