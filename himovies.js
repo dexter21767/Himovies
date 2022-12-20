@@ -118,7 +118,7 @@ async function meta(type, Hmovies_id) {
 
 async function search(type, query, skip) {
     try {
-        let url = `${host}/search/${query.replace(/\s/g, '-')}`
+        let url = `${host}/search/${encodeURIComponent(query.replace(/\s/g, '-'))}`
         if (skip) {
             skip = Math.round((skip / 32) + 1);
             url += `?page=${skip}`
