@@ -4,10 +4,10 @@ const { parse } = require("fast-html-parser");
 const slugify = require('slugify');
 
 const NodeCache = require( "node-cache" );
-const MetaCache = new NodeCache( { stdTTL: 3600, checkperiod: 5400 } );
-const CatalogCache = new NodeCache( { stdTTL: 3600, checkperiod: 5400 } );
-const StreamCache = new NodeCache( { stdTTL: 3600, checkperiod: 5400 } );
-const ServersCache = new NodeCache( { stdTTL: 3600, checkperiod: 5400 } );
+const MetaCache = new NodeCache( { stdTTL: 21600, checkperiod: 32400 } );
+const CatalogCache = new NodeCache( { stdTTL: 21600, checkperiod: 32400 } );
+const StreamCache = new NodeCache( { stdTTL: 1800, checkperiod: 2700 } );
+const ServersCache = new NodeCache( { stdTTL: 1800, checkperiod: 2700 } );
 
 
 const { MOVIES } = require('@consumet/extensions')

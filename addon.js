@@ -22,17 +22,15 @@ builder.defineStreamHandler((args) => {
 builder.defineCatalogHandler((args) => {
 	console.log('test');
 	console.log("addon.js Catalog:", args);
-	if(args.id.startsWith('Hmovies')){
-		if (args.extra.search) { 
-			return Promise.resolve(himovies.search(args.type, args.extra.search,args.extra.skip))
-				//.then((metas) => { console.log('metas', metas) });
-				.then((metas) => ({ metas: metas }));
-		} else if(id.split('-').legth >1) {
-			return Promise.resolve(himovies.catalog(args.type, args.id,args.extra.skip))
-				//.then((metas) => { console.log('metas', metas) });
-				.then((metas) => ({ metas: metas }));
-		}
-	}else return Promise.resolve({ metas: [] });
+	if(args.id.startsWith("Hmovies-") || args.id.startsWith("Hseries-")) {
+		return Promise.resolve(himovies.catalog(args.type, args.id,args.extra.skip))
+			//.then((metas) => { console.log('metas', metas) });
+			.then((metas) => ({ metas: metas }));
+	}else if (args.extra.search) { 
+		return Promise.resolve(himovies.search(args.type, args.extra.search,args.extra.skip))
+			//.then((metas) => { console.log('metas', metas) });
+			.then((metas) => ({ metas: metas }));
+	} else return Promise.resolve({ metas: [] });
 });
 
 builder.defineMetaHandler((args) => {
