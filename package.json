@@ -10,6 +10,7 @@
 		"@consumet/extensions": "github:consumet/consumet.ts",
 		"axios": "^0.27.2",
 		"fast-html-parser": "^1.0.1",
+		"node-cache": "^5.1.2",
 		"stremio-addon-sdk": "github:dexter21767/stremio-addon-sdk"
 	},
 	"devDependencies": {
