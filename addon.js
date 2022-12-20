@@ -27,7 +27,7 @@ builder.defineCatalogHandler((args) => {
 			//.then((metas) => { console.log('metas', metas) });
 			.then((metas) => ({ metas: metas }));
 	}else if (args.extra.search) { 
-		return Promise.resolve(himovies.search(args.type, args.extra.search,args.extra.skip))
+		return Promise.resolve(himovies.search(args.type, args.extra.search))
 			//.then((metas) => { console.log('metas', metas) });
 			.then((metas) => ({ metas: metas }));
 	} else return Promise.resolve({ metas: [] });

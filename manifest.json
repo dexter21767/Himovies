@@ -15,11 +15,6 @@
                 {
                     "name": "search",
                     "isRequired": true
-                },
-                {
-                    "name": "skip",
-                    "isRequired": false,
-                    "options": [32]
                 }
             ]
         },
@@ -31,11 +26,6 @@
                 {
                     "name": "search",
                     "isRequired": true
-                },
-                {
-                    "name": "skip",
-                    "isRequired": false,
-                    "options": [32]
                 }
             ]
         },
