@@ -22,15 +22,17 @@ builder.defineStreamHandler((args) => {
 builder.defineCatalogHandler((args) => {
 	console.log('test');
 	console.log("addon.js Catalog:", args);
-	if (args.extra.search) { 
-		return Promise.resolve(himovies.search(args.type, encodeURIComponent(args.extra.search),args.extra.skip))
-			//.then((metas) => { console.log('metas', metas) });
-			.then((metas) => ({ metas: metas }));
-	} else {
-		return Promise.resolve(himovies.catalog(args.type, args.id,args.extra.skip))
-			//.then((metas) => { console.log('metas', metas) });
-			.then((metas) => ({ metas: metas }));
-	}
+	if(args.id.startsWith('Hmovies')){
+		if (args.extra.search) { 
+			return Promise.resolve(himovies.search(args.type, encodeURIComponent(args.extra.search),args.extra.skip))
+				//.then((metas) => { console.log('metas', metas) });
+				.then((metas) => ({ metas: metas }));
+		} else if(id.split('-').legth >1) {
+			return Promise.resolve(himovies.catalog(args.type, args.id,args.extra.skip))
+				//.then((metas) => { console.log('metas', metas) });
+				.then((metas) => ({ metas: metas }));
+		}
+	}else return Promise.resolve({ metas: [] });
 });
 
 builder.defineMetaHandler((args) => {

@@ -19,9 +19,7 @@
                 {
                     "name": "skip",
                     "isRequired": false,
-                    "options": [
-                        32
-                    ]
+                    "options": [32]
                 }
             ]
         },
@@ -37,9 +35,7 @@
                 {
                     "name": "skip",
                     "isRequired": false,
-                    "options": [
-                        32
-                    ]
+                    "options": [32]
                 }
             ]
         },
@@ -51,9 +47,7 @@
                 {
                     "name": "skip",
                     "isRequired": false,
-                    "options": [
-                        32
-                    ]
+                    "options": [32]
                 }
             ]
         },
@@ -65,9 +59,7 @@
                 {
                     "name": "skip",
                     "isRequired": false,
-                    "options": [
-                        32
-                    ]
+                    "options": [32]
                 }
             ]
         },
@@ -79,9 +71,7 @@
                 {
                     "name": "skip",
                     "isRequired": false,
-                    "options": [
-                        32
-                    ]
+                    "options": [32]
                 }
             ]
         },
@@ -93,40 +83,14 @@
                 {
                     "name": "skip",
                     "isRequired": false,
-                    "options": [
-                        32
-                    ]
+                    "options": [32]
                 }
             ]
         }
     ],
-    "resources": [
-        {
-            "name": "stream",
-            "types": [
-                "movie",
-                "series"
-            ],
-            "idPrefixes": [
-                "Hmovies_id",
-                "tt"
-            ]
-        },
-        {
-            "name": "meta",
-            "types": [
-                "movie",
-                "series"
-            ],
-            "idPrefixes": [
-                "Hmovies_id"
-            ]
-        }
-    ],
-    "types": [
-        "movie",
-        "series"
-    ],
+    "resources": ["stream","meta"],
+    "idPrefixes": ["Hmovies_id"],
+    "types": ["movie","series"],
     "behaviorHints": {
         "configurable": false,
         "configurationRequired": false
