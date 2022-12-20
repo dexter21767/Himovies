@@ -194,14 +194,17 @@ async function seasonlist(Hmovies_id = String, releaseDate = String) {
     }
 }
 
-async function search(type = String, query= String) {
+async function search(type = String, query= String, skip) {
     try {
+        if (skip) {
+            skip = Math.round((skip / 32) + 1);
+        }else skip = 1;
         query = slugify(query);
-        const CacheId  = `${type}_${query}`;
+        const CacheId  = `${type}_${query}_${skip}`;
         const Cached = CatalogCache.get(CacheId);
         if(Cached) return Cached;
         
-        const url = `${host}/search/${query}`
+        const url = `${host}/search/${query}?page=${skip}`
         
         console.log('url', url);
         const data = await request(url);
