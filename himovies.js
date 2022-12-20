@@ -1,6 +1,7 @@
 const axios = require('axios').default;
 const cheerio = require('cheerio');
 const { parse } = require("fast-html-parser");
+const slugify = require('slugify');
 
 const NodeCache = require( "node-cache" );
 const MetaCache = new NodeCache( { stdTTL: 3600, checkperiod: 5400 } );
@@ -150,7 +151,7 @@ async function search(type, query, skip) {
         if (skip) {
             skip = Math.round((skip / 32) + 1);
         }else skip = 1;
-
+        query = slugify(query);
         const CacheId  = `${type}_${query}_${skip}`;
         const Cached = CatalogCache.get(CacheId);
         if(Cached) return Cached;

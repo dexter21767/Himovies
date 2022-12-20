@@ -24,7 +24,7 @@ builder.defineCatalogHandler((args) => {
 	console.log("addon.js Catalog:", args);
 	if(args.id.startsWith('Hmovies')){
 		if (args.extra.search) { 
-			return Promise.resolve(himovies.search(args.type, encodeURIComponent(args.extra.search),args.extra.skip))
+			return Promise.resolve(himovies.search(args.type, args.extra.search,args.extra.skip))
 				//.then((metas) => { console.log('metas', metas) });
 				.then((metas) => ({ metas: metas }));
 		} else if(id.split('-').legth >1) {
