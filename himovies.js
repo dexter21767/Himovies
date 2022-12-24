@@ -1,6 +1,5 @@
 const axios = require('axios').default;
 const cheerio = require('cheerio');
-const { parse } = require("fast-html-parser");
 const slugify = require('slugify');
 const {decode} = require('html-entities');
 
@@ -18,13 +17,8 @@ const host = flixhq.baseUrl;
 const logo = flixhq.logo;
 
 
-String.prototype.decode = function() 
-{ 
-   //no need to do (str+'') anymore because 'this' can only be a string
-   return decode(this);
-} 
-
 client = axios.create({
+    baseURL : host,
     headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0"
     },
@@ -135,10 +129,23 @@ async function meta(type= String, Hmovies_id= String) {
             delete data.rating;
         }
         if(data.hasOwnProperty("description")) data.description = decode(data.description);
-        if (type == "series") data.videos = await seasonlist(data.id, new Date(data.releaseDate).toISOString());
-        if(type == "series" && !data.videos) throw "error getting videos";
-        else data.id = data.id + ":" + data.episodes[0].id;
+        if (type == "movie") data.id = data.id + ":" + data.episodes[0].id;
+        else if (type == "series"){
+             data.videos = [];
+             const released = new Date(data.releaseDate).toISOString();
+             data.episodes.forEach(episode => {
+                data.videos.push({
+                    id: "Hmovies_id:" + encodeURIComponent(data.id) + ':' + episode.id,
+                    title: episode.title,
+                    season :episode.season,
+                    episode: episode.number,
+                    released: released,
+                    available: true
+                });
+             });
+            }
         delete data.episodes;
+
         if (data.hasOwnProperty("releaseDate")) {
             if (type == "movie") data.released = new Date(data.releaseDate).toISOString()
             data.releaseInfo = data.releaseDate.split('-')[0];
@@ -154,57 +161,18 @@ async function meta(type= String, Hmovies_id= String) {
     }
 }
 
-async function seasonlist(Hmovies_id = String, releaseDate = String) {
-    try {
-        const id = Hmovies_id.split("-").pop();
-        console.log("id", id,"Hmovies_id",Hmovies_id)
-        const url = `${host}/ajax/v2/tv/seasons/${id}/`;
-        console.log(url)
-        const data = await request(url);
-        if (!data || !data.data) throw "error getting data"
-        var html = parse(data.data);
-        var list = html.querySelectorAll("a.dropdown-item");
-
-        var seasonssarray = [];
-        for (let i = 0; i < list.length; i++) {
-            let seasonId = list[i].rawAttributes['data-id'];
-            let epurl = `${host}/ajax/v2/season/episodes/${seasonId}`;
-            console.log('epurl', epurl)
-            let data = await request(epurl);
-            if (!data || !data.data) throw "error getting data"
-            const html = parse(data.data);
-            var eplist = html.querySelectorAll("ul.nav li.nav-item a");
-            console.log(eplist);
-            for (let c = 0; c < eplist.length; c++) {
-                seasonssarray.push({
-                    id: "Hmovies_id:" + encodeURIComponent(Hmovies_id) + ':' + eplist[c].rawAttributes['data-id'],
-                    title: decode(eplist[c].rawAttributes['title']),
-                    season: i + 1,
-                    episode: c + 1,
-                    released: releaseDate,
-                    available: true
-                });
-            }
-        }
-        console.log('seasonssarray',seasonssarray)
-        return seasonssarray;
-    } catch (e) {
-        console.error(e);
-        return Promise.reject(e);
-    }
-}
-
 async function search(type = String, query= String, skip) {
     try {
         if (skip) {
             skip = Math.round((skip / 32) + 1);
         }else skip = 1;
         query = slugify(query);
+        if(!query) throw new Error("search query couldn't be procecced")
         const CacheId  = `${type}_${query}_${skip}`;
         const Cached = CatalogCache.get(CacheId);
         if(Cached) return Cached;
         
-        const url = `${host}/search/${query}?page=${skip}`
+        const url = `/search/${query}?page=${skip}`
         
         console.log('url', url);
         const data = await request(url);
@@ -229,10 +197,10 @@ async function catalog(type= String, id= String, skip) {
         if(Cached) return Cached;
 
 
-        if (id == 'Hmovies-Popular') url = `${host}/movie?page=${skip}`;
-        else if (id == "Hseries-Popular") url = `${host}/tv-show?page=${skip}`;
-        else if (id == "Hmovies-Top") url = `${host}/top-imdb/?type=movie&page=${skip}`;
-        else if (id == "Hseries-Top") url = `${host}/top-imdb/?type=tv&page=${skip}`;
+        if (id == 'Hmovies-Popular') url = `/movie?page=${skip}`;
+        else if (id == "Hseries-Popular") url = `/tv-show?page=${skip}`;
+        else if (id == "Hmovies-Top") url = `/top-imdb/?type=movie&page=${skip}`;
+        else if (id == "Hseries-Top") url = `/top-imdb/?type=tv&page=${skip}`;
         
         
         console.log('url', url);
